@@ -148,27 +148,16 @@ def teste():
   
     
     OrderDetail = driver.find_elements(By.ID,'OrderDetail')
-    orders = [orders.text.split("\n") for orders in OrderDetail]
+    orders = [orders.text.split("\n") for orders in chain.from_iterable(OrderDetail)]
 
-    fields_orders = ['Pedido','Referencia','Descricao','UN','Natureza','Qtde','qtd faturada'
-                     ,'qtde aberto','Vl Unit','Vl Produtos','Vl Produto Aberto']
+    fields_orders = ['Pedido', 'Item Cód', 'Item Descrição', 'UN', 'Natureza', 'Qtde Solicitada',
+                      'Qtde Faturada', 'Qtde Aberto', 'Vl Unit', 'Vl Produtos', 'Vl Prod Aberto']
     #items = driver.find_elements(By.CLASS_NAME,'k-master-row')
-    lista_items = []
-    for order in orders:
-        lista_items.append(order[11:])
 
-    data = pd.DataFrame(lista_items)
+
+    data = pd.DataFrame(orders, columns=fields_orders)
+    print(data)
  
-
-
-       
-         
-         
-        #for item in orders[i][11:-1]:
-        #    for field in fields:
-        #        print(field,item)
-        
-          
 
 
 user_login()
