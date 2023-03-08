@@ -78,6 +78,7 @@ def get_order_detais(*args, **kwargs) -> None:
     lista_dicts = []
     for urls in args:
         print(urls)
+        dict_items = {}
 
         driver.get(urls["URLS"])
 
@@ -97,7 +98,7 @@ def get_order_detais(*args, **kwargs) -> None:
         valores_2 = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr')
         order = [orders.text.split("\n") for orders in valores_2]
         for i in range(len(order)):
-            dict_items = {}
+            
        
             dict_items['URLS'] = urls["URLS"]
             dict_items['LOJAS'] = urls["LOJAS"]
@@ -123,12 +124,12 @@ def get_order_detais(*args, **kwargs) -> None:
                 dict_items['Valor Produtos'] = order[i][7]
                
                 dict_items.update(new_dict)
-                lista_dicts.append(dict_items)
+                
             except Exception as e:
                 print(e)
             
-            print(dict_items)
-
+           
+        lista_dicts.append(dict_items)
     data = pd.DataFrame(lista_dicts)
     data.to_excel("pedidosteste.xlsx")
  
@@ -247,14 +248,9 @@ def get_order() -> Generator[dict[str, Any], None, None]:
         #get_order_detais
 
 
-    
-    
-
 user_login()
 
 get_order()
 
 
 
-
-        #get_order_detais()
