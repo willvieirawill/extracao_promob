@@ -71,7 +71,7 @@ def user_login() -> None:
     WebDriverWait(driver, 20).until(EC.presence_of_element_located((
         By.XPATH, '//*[@id="div-login"]/div[4]/input'))).click()
 
-     
+import datetime
     
 def get_order_detais(*args, **kwargs) -> None:
     lista_dicts = []
@@ -168,12 +168,13 @@ def get_order_detais(*args, **kwargs) -> None:
         for i in range(len(pedido)):
             dict_items = {}
           
-            testeddate = str(urls["datas"])
-            datasf = datetime.datetime.strftime(testeddate,'%Y-%m-%d %H:%M:%S')
+          
+            a = str(urls["datas"])
             
-            testeddate = str(urls["dataentrega"])
-            datas_entrega = datetime.datetime.strftime(testeddate,'%Y-%m-%d %H:%M:%S')
-            
+            b = str(urls["dataentrega"])
+            dataentrega = datetime.strftime(b, '%d/%m/%Y')
+
+            datasf = datetime.strptime(a, '%d/%m/%Y')
             
             dict_items["pedido"] = pedido[i]
             dict_items["refs"] = refs[i]
@@ -208,7 +209,7 @@ def get_order_detais(*args, **kwargs) -> None:
             dict_items["status_pedidos"] = urls["status"]
             dict_items["tipo_pedidos"] = urls["tipo"]
             dict_items["totais"] = urls["total"]
-            dict_items["datas_entrega"] = datas_entrega
+            dict_items["datas_entrega"] = dataentrega
             dict_items["datas"] = datasf
             dict_items["cliente_pedidos"] = urls["cliente"]
             dict_items["pedido_oc"] = urls["pedidooc"]
@@ -370,7 +371,6 @@ def get_order() -> Generator[dict[str, Any], None, None]:
             pass
 
         new_dict["datas"] = datas[i]
-        print(new_dict)
         get_order_detais(new_dict)
 
 
