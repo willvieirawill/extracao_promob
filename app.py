@@ -22,7 +22,7 @@ import pandas as pd
 import re
 from inserted import insert_dim_pedido
 from datetime import date, datetime
-
+from datetime import datetime, timedelta
 
 load_dotenv()
 
@@ -140,6 +140,7 @@ def get_order_detais(*args, **kwargs) -> None:
             nat = [nat.text for nat in natureza]
         except Exception as e:
             print(e)
+
         try:
             unidade = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[4]')
             unid = [unid.text for unid in unidade]
@@ -164,19 +165,24 @@ def get_order_detais(*args, **kwargs) -> None:
         except Exception as e:
             print(e)
 
-
         for i in range(len(pedido)):
             dict_items = {}
           
+         
+
+
+            format_data = "%Y-%m-%dT%H:%M:%S.%fZ"
+            inctime=urls["datas"]
+
+            datasf=datetime.strptime(inctime,format_data)
+
+
+
+            format_data = "%Y-%m-%dT%H:%M:%S.%fZ"
+            inctime=urls["dataentrega"]
+
+            datas_entrega=datetime.strptime(inctime,format_data)
                 
-            datetime_format = "%d/%m/%Y - %H:%M:%S"
-            datasf = datetime.strptime(urls["datas"], datetime_format)
-
-        
-            datetime_format = "%d/%m/%Y - %H:%M:%S"
-
-            datas_entrega = datetime.strptime(urls["dataentrega"], datetime_format)
-       
             dict_items["pedido"] = pedido[i]
             dict_items["refs"] = refs[i]
             dict_items["desc"] = desc[i]
@@ -238,6 +244,9 @@ def get_order() -> Generator[dict[str, Any], None, None]:
     data_final = driver.find_element(By.ID,'datepickerfin')
     data_final.clear()
     data_final.send_keys("01/02/2023")
+
+
+    
 
     time.sleep(1)
 
