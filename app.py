@@ -167,6 +167,15 @@ def get_order_detais(*args, **kwargs) -> None:
 
         for i in range(len(pedido)):
             dict_items = {}
+          
+                
+            datetime_format = "%d/%m/%Y - %H:%M:%S"
+            datasf = datetime.strptime(urls["datas"], datetime_format)
+
+        
+            datetime_format = "%d/%m/%Y - %H:%M:%S"
+
+            datas_entrega = datetime.strptime(urls["dataentrega"], datetime_format)
        
             dict_items["pedido"] = pedido[i]
             dict_items["refs"] = refs[i]
@@ -184,6 +193,7 @@ def get_order_detais(*args, **kwargs) -> None:
                 dict_items["emissao"] = emissao
             except:
                 pass
+
             try:
                 dict_items["entrega"] = entrega
             except:
@@ -200,13 +210,13 @@ def get_order_detais(*args, **kwargs) -> None:
             dict_items["status_pedidos"] = urls["status"]
             dict_items["tipo_pedidos"] = urls["tipo"]
             dict_items["totais"] = urls["total"]
-            dict_items["datas_entrega"] = urls["dataentrega"]
-            dict_items["datas"] = urls["datas"]
+            dict_items["datas_entrega"] = datas_entrega
+            dict_items["datas"] = datasf
             dict_items["cliente_pedidos"] = urls["cliente"]
             dict_items["pedido_oc"] = urls["pedidooc"]
             dict_items["referencias_pedidos"] = urls["referenciapedido"]
-            
-          
+
+
             insert_dim_pedido(dict_items)
             lista_dicts.append(dict_items)
     
