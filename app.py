@@ -95,39 +95,71 @@ def get_order_detais(*args, **kwargs) -> None:
             oc_pedido = driver.find_elements(By.XPATH,'//*[@id="grid"]/tbody/tr[1]/td[7]')[0].text
         except Exception as e:
             print(e)
+        try:
+            quantidade_solicitada = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[6]')
+            quantidad_s = [quantidad_s.text for quantidad_s in quantidade_solicitada]
+        except Exception as e:
+            print(e)
 
-        quantidade_solicitada = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[6]')
-        quantidad_s = [quantidad_s.text for quantidad_s in quantidade_solicitada]
+        try:
+            quantidade_faturada = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[7]/div')
+            quantidadef = [quantidadef.text for quantidadef in quantidade_faturada]
+        except Exception as e:
+            print(e)
 
-        quantidade_faturada = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[7]/div')
-        quantidadef = [quantidadef.text for quantidadef in quantidade_faturada]
 
-        quantidade_em_aberto = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[8]/div')
-        quantidade_a = [quantidade_a.text for quantidade_a in quantidade_em_aberto]
+        try:
+            quantidade_em_aberto = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[8]/div')
+            quantidade_a = [quantidade_a.text for quantidade_a in quantidade_em_aberto]
+        except Exception as e:
+            print(e)
 
-        valor_unitario = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[9]/div')
-        valor_un = [valor_un.text for valor_un in valor_unitario]
+        try:
+            valor_unitario = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[9]/div')
+            valor_un = [valor_un.text for valor_un in valor_unitario]
+        except Exception as e:
+            print(e)
 
-        valor_produtos = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[10]/div')
-        valor_prod = [valor_prod.text for valor_prod in valor_produtos]
+        try:
+            valor_produtos = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[10]/div')
+            valor_prod = [valor_prod.text for valor_prod in valor_produtos]
+        except Exception as e:
+            print(e)
 
-        valor_aberto = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[11]/div')
-        valor_ab = [valor_ab.text for valor_ab in valor_aberto]
+        try:
+            valor_aberto = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[11]/div')
+            valor_ab = [valor_ab.text for valor_ab in valor_aberto]
+        except Exception as e:
+            print(e)
+            
+        try:
+            natureza = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[5]')
+            nat = [nat.text for nat in natureza]
+        except Exception as e:
+            print(e)
+        try:
+            unidade = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[4]')
+            unid = [unid.text for unid in unidade]
+        except Exception as e:
+            print(e)
 
-        natureza = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[5]')
-        nat = [nat.text for nat in natureza]
+        try:
+            descricao = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[3]')
+            desc = [desc.text for desc in descricao]
+        except Exception as e:
+            print(e)
 
-        unidade = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[4]')
-        unid = [unid.text for unid in unidade]
+        try:
+            referencias = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[2]')
+            refs = [refs.text for refs in referencias]
+        except Exception as e:
+            print(e)
 
-        descricao = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[3]')
-        desc = [desc.text for desc in descricao]
-
-        referencias = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[2]')
-        refs = [refs.text for refs in referencias]
-
-        pedidos = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[1]/div')
-        pedido = [pedido.text for pedido in pedidos]
+        try:
+            pedidos = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[1]/div')
+            pedido = [pedido.text for pedido in pedidos]
+        except Exception as e:
+            print(e)
 
 
         for i in range(len(pedido)):
@@ -176,7 +208,7 @@ def get_order_detais(*args, **kwargs) -> None:
     
     data = pd.DataFrame(lista_dicts)
     data.to_excel("relatoriopedidosteste.xlsx")
-    
+
 def get_order() -> Generator[dict[str, Any], None, None]:
     """Extrai informações Tela inicial Promob"""
     driver.implicitly_wait(4)
