@@ -41,4 +41,3 @@ Column('cliente_pedidos',String),
 Column('referencias_pedidos',Integer),
 schema="logistica",extend_existing=True)
 
-       

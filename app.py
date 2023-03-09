@@ -20,6 +20,9 @@ from selenium.webdriver.common.keys import Keys
 from typing import Generator, Any
 import pandas as pd
 import re
+from inserted import insert_dim_pedido
+from datetime import date, datetime
+
 
 load_dotenv()
 
@@ -97,38 +100,38 @@ def get_order_detais(*args, **kwargs) -> None:
             print(e)
         try:
             quantidade_solicitada = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[6]')
-            quantidad_s = [quantidad_s.text for quantidad_s in quantidade_solicitada]
+            quantidad_s = [quantidad_s.text.replace(",",".") for quantidad_s in quantidade_solicitada]
         except Exception as e:
             print(e)
 
         try:
             quantidade_faturada = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[7]/div')
-            quantidadef = [quantidadef.text for quantidadef in quantidade_faturada]
+            quantidadef = [quantidadef.text.replace(",",".") for quantidadef in quantidade_faturada]
         except Exception as e:
             print(e)
 
 
         try:
             quantidade_em_aberto = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[8]/div')
-            quantidade_a = [quantidade_a.text for quantidade_a in quantidade_em_aberto]
+            quantidade_a = [quantidade_a.text.replace(",",".") for quantidade_a in quantidade_em_aberto]
         except Exception as e:
             print(e)
 
         try:
             valor_unitario = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[9]/div')
-            valor_un = [valor_un.text for valor_un in valor_unitario]
+            valor_un = [valor_un.text.replace(",",".") for valor_un in valor_unitario]
         except Exception as e:
             print(e)
 
         try:
             valor_produtos = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[10]/div')
-            valor_prod = [valor_prod.text for valor_prod in valor_produtos]
+            valor_prod = [valor_prod.text.replace(",",".") for valor_prod in valor_produtos]
         except Exception as e:
             print(e)
 
         try:
             valor_aberto = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[11]/div')
-            valor_ab = [valor_ab.text for valor_ab in valor_aberto]
+            valor_ab = [valor_ab.text.replace(",",".") for valor_ab in valor_aberto]
         except Exception as e:
             print(e)
 
@@ -162,9 +165,13 @@ def get_order_detais(*args, **kwargs) -> None:
             print(e)
 
 
+
+
+
+
         for i in range(len(pedido)):
             dict_items = {}
-            
+       
             dict_items["pedido"] = pedido[i]
             dict_items["refs"] = refs[i]
             dict_items["desc"] = desc[i]
@@ -203,7 +210,8 @@ def get_order_detais(*args, **kwargs) -> None:
             dict_items["pedido_oc"] = urls["pedidooc"]
             dict_items["referencias_pedidos"] = urls["referenciapedido"]
             
-            print(dict_items)
+          
+            insert_dim_pedido(dict_items)
             lista_dicts.append(dict_items)
     
     data = pd.DataFrame(lista_dicts)
@@ -243,7 +251,7 @@ def get_order() -> Generator[dict[str, Any], None, None]:
 
     try:
         valortotal = driver.find_elements(By.XPATH,'//*[@id="grid"]/tbody/tr/td[11]/div')
-        totais = [valor.text for valor in valortotal]
+        totais = [valor.text.replace(".","").replace(",",".") for valor in valortotal]
       
     except Exception as e:
         print(e)
