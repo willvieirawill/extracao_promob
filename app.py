@@ -2,30 +2,23 @@ from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from datetime import datetime
 from selenium import webdriver
 import time
 from selenium.webdriver.support import expected_conditions as EC
 import re
-from typing import Literal, List, Generator
+from typing import Literal, List, Generator,Any
 from itertools import chain, zip_longest
-from pathlib import Path
 from dotenv import load_dotenv
 from urllib import parse
-from dotenv import load_dotenv
-from os import path
 import os
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
-from typing import Generator, Any
 import pandas as pd
-import re
 from inserted import insert_dim_pedido
-from datetime import date, datetime
-from datetime import datetime, timedelta
-import datetime
-load_dotenv()
+from datetime import datetime
 
+
+load_dotenv()
 
 
 options = webdriver.ChromeOptions() 
@@ -71,7 +64,7 @@ def user_login() -> None:
     WebDriverWait(driver, 20).until(EC.presence_of_element_located((
         By.XPATH, '//*[@id="div-login"]/div[4]/input'))).click()
 
-import datetime
+
     
 def get_order_detais(*args, **kwargs) -> None:
     lista_dicts = []
@@ -169,9 +162,10 @@ def get_order_detais(*args, **kwargs) -> None:
             dict_items = {}
           
           
-            a = str(urls["datas"])
+            a = urls["datas"]
             
-            b = str(urls["dataentrega"])
+            b = urls["dataentrega"]
+
             dataentrega = datetime.strftime(b, '%d/%m/%Y')
 
             datasf = datetime.strptime(a, '%d/%m/%Y')
