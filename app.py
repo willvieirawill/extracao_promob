@@ -39,7 +39,6 @@ def scroll_page() -> None:
         if lastCount==lenOfPage:
             match=True
 
-
 def user_login() -> None:
     driver.get("https://consultasweb.promob.com/Authentication/Index?ReturnUrl")
     driver.implicitly_wait(7)
@@ -60,12 +59,10 @@ def user_login() -> None:
         .send_keys_to_element(password, "mybox")\
         .perform()
 
-
     WebDriverWait(driver, 20).until(EC.presence_of_element_located((
         By.XPATH, '//*[@id="div-login"]/div[4]/input'))).click()
 
 
-    
 def get_order_detais(*args, **kwargs) -> None:
     lista_dicts = []
     driver.implicitly_wait(7)
@@ -78,27 +75,32 @@ def get_order_detais(*args, **kwargs) -> None:
         time.sleep(3)
 
         try:
-            emissao = driver.find_elements(By.XPATH,'//*[@id="grid"]/tbody/tr[1]/td[3]/span')[0].text
+            emissao = driver.find_elements(
+                By.XPATH,'//*[@id="grid"]/tbody/tr[1]/td[3]/span')[0].text
         except Exception as e:
             print(e)
 
         try:
-            entrega = driver.find_elements(By.XPATH,'//*[@id="grid"]/tbody/tr[1]/td[4]/span')[0].text
+            entrega = driver.find_elements(
+                By.XPATH,'//*[@id="grid"]/tbody/tr[1]/td[4]/span')[0].text
         except Exception as e:
             print(e)
         
         try:
-            oc_pedido = driver.find_elements(By.XPATH,'//*[@id="grid"]/tbody/tr[1]/td[7]')[0].text
+            oc_pedido = driver.find_elements(
+                By.XPATH,'//*[@id="grid"]/tbody/tr[1]/td[7]')[0].text
         except Exception as e:
             print(e)
         try:
-            quantidade_solicitada = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[6]')
+            quantidade_solicitada = driver.find_elements(
+                By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[6]')
             quantidad_s = [quantidad_s.text.replace(",",".") for quantidad_s in quantidade_solicitada]
         except Exception as e:
             print(e)
 
         try:
-            quantidade_faturada = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[7]/div')
+            quantidade_faturada = driver.find_elements(
+                By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[7]/div')
             quantidadef = [quantidadef.text.replace(",",".") for quantidadef in quantidade_faturada]
         except Exception as e:
             print(e)
@@ -203,7 +205,6 @@ def get_order_detais(*args, **kwargs) -> None:
             dict_items["cliente_pedidos"] = urls["cliente"]
             dict_items["pedido_oc"] = urls["pedidooc"]
             dict_items["referencias_pedidos"] = urls["referenciapedido"]
-
 
             insert_dim_pedido(dict_items)
             lista_dicts.append(dict_items)
