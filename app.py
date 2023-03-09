@@ -131,7 +131,7 @@ def get_order_detais(*args, **kwargs) -> None:
             valor_ab = [valor_ab.text for valor_ab in valor_aberto]
         except Exception as e:
             print(e)
-            
+
         try:
             natureza = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[5]')
             nat = [nat.text for nat in natureza]
@@ -305,16 +305,56 @@ def get_order() -> Generator[dict[str, Any], None, None]:
 
     for i in range(len(urls_p)):
         new_dict = {}
-        new_dict["urls"] = urls_p[i]
-        new_dict["referenciapedido"] = referencias_p[i]
-        new_dict["pedidooc"] = pedido_oc[i]
-        new_dict["cliente"] = cliente_pedidos[i]
-        new_dict["lote"] = lote_pedidos[i]
-        new_dict["loja"] = loja_responsavel[i]
-        new_dict["status"] = status_pedidos[i]
-        new_dict["tipo"] = tipo_pedidos[i]
-        new_dict["total"] = totais[i]
-        new_dict["dataentrega"] = datas_entrega[i]
+        
+        try:
+            new_dict["urls"] = urls_p[i]
+        except:
+            pass
+
+        try:
+            new_dict["referenciapedido"] = referencias_p[i]
+        except:
+            pass
+
+        try:
+            new_dict["pedidooc"] = pedido_oc[i]
+        except:
+            pass
+
+        try:
+            new_dict["cliente"] = cliente_pedidos[i]
+        except:
+            pass
+
+        try:
+            new_dict["lote"] = lote_pedidos[i]
+        except:
+            pass
+
+        try:
+            new_dict["loja"] = loja_responsavel[i]
+        except:
+            pass
+
+        try:
+            new_dict["status"] = status_pedidos[i]
+        except:
+            pass
+
+        try:
+            new_dict["tipo"] = tipo_pedidos[i]
+        except:
+            pass
+
+        try:
+            new_dict["total"] = totais[i]
+        except:
+            pass
+        try:
+            new_dict["dataentrega"] = datas_entrega[i]
+        except:
+            pass
+
         new_dict["datas"] = datas[i]
         print(new_dict)
         get_order_detais(new_dict)
