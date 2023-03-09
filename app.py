@@ -16,7 +16,7 @@ from selenium.webdriver.common.keys import Keys
 import pandas as pd
 from inserted import insert_dim_pedido
 from datetime import datetime
-
+from dateutil import parser
 
 load_dotenv()
 
@@ -24,7 +24,7 @@ load_dotenv()
 options = webdriver.ChromeOptions() 
 options.add_experimental_option('useAutomationExtension', False)
 driver = webdriver.Chrome(options=options,
-                               executable_path=r"C:\estimadoresteste\extracao_promob\chromedriver\chromedriver.exe")
+                               executable_path=r"C:\Users\Mybox Marcenaria\Documents\ETL_rev3\extracao_promob\chromedriver\chromedriver.exe")
 
 
 def scroll_page() -> None:
@@ -160,15 +160,10 @@ def get_order_detais(*args, **kwargs) -> None:
 
         for i in range(len(pedido)):
             dict_items = {}
-          
-          
-            a = urls["datas"]
-            
-            b = urls["dataentrega"]
 
-            dataentrega = datetime.strftime(b, '%d/%m/%Y')
+            dataentrega = parser.parse(urls["dataentrega"])
 
-            datasf = datetime.strptime(a, '%d/%m/%Y')
+            datasf = parser.parse(urls["datas"])
             
             dict_items["pedido"] = pedido[i]
             dict_items["refs"] = refs[i]
@@ -217,6 +212,7 @@ def get_order_detais(*args, **kwargs) -> None:
     data.to_excel("relatoriopedidosteste.xlsx")
 
 def get_order() -> Generator[dict[str, Any], None, None]:
+    lista_dicts = []
     """Extrai informações Tela inicial Promob"""
     driver.implicitly_wait(4)
     
@@ -233,7 +229,6 @@ def get_order() -> Generator[dict[str, Any], None, None]:
     data_final.send_keys("01/02/2023")
 
 
-    
     time.sleep(1)
 
     try:
@@ -365,9 +360,11 @@ def get_order() -> Generator[dict[str, Any], None, None]:
             pass
 
         new_dict["datas"] = datas[i]
-        get_order_detais(new_dict)
+        #get_order_detais(new_dict)
+        lista_dicts.append(new_dict)
 
-
+    df = pd.DataFrame(lista_dicts)
+    df.to_csv("urlspedidospromob.csv")
  
    
 user_login()
