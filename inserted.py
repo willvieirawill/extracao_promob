@@ -22,7 +22,7 @@ def insert_dim_pedido(*args, **kwargs):
    
         with dwengine.connect() as conn:
                 result = conn.execute(insert(dim_pedidos_promob)
-                    ,[{"pedido":arg["pedido"],"desc":arg["desc"],"unid":arg["unid"],"nat":arg["nat"],"valor_ab":arg["valor_ab"]
+                    ,[{"pedido":arg["pedido"],"desc":arg["desc"],"unid":arg["unid"],"nat":int(arg["nat"]),"valor_ab":float(arg["valor_ab"])
                        ,"valor_prod":arg["valor_prod"]
                        ,"valor_un":float(arg["valor_un"]),"quantidade_a":float(arg["quantidade_a"]),"quantidadef":float(arg["quantidadef"])
                        ,"quantidad_s":float(arg["quantidad_s"]),"emissao":arg["emissao"],"entrega":arg["entrega"]

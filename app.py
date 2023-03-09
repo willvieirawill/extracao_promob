@@ -165,10 +165,6 @@ def get_order_detais(*args, **kwargs) -> None:
             print(e)
 
 
-
-
-
-
         for i in range(len(pedido)):
             dict_items = {}
        
