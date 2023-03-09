@@ -23,7 +23,7 @@ import re
 from inserted import insert_dim_pedido
 from datetime import date, datetime
 from datetime import datetime, timedelta
-
+import datetime
 load_dotenv()
 
 
@@ -168,21 +168,11 @@ def get_order_detais(*args, **kwargs) -> None:
         for i in range(len(pedido)):
             dict_items = {}
           
-         
+    
+            datasf = datetime.datetime.strftime(urls["datas"],'%Y-%m-%d %H:%M:%S')
 
-
-            format_data = "%Y-%m-%dT%H:%M:%S.%fZ"
-            inctime=urls["datas"]
-
-            datasf=datetime.strptime(inctime,format_data)
-
-
-
-            format_data = "%Y-%m-%dT%H:%M:%S.%fZ"
-            inctime=urls["dataentrega"]
-
-            datas_entrega=datetime.strptime(inctime,format_data)
-                
+            datas_entrega = datetime.datetime.strftime(urls["dataentrega"],'%Y-%m-%d %H:%M:%S')
+            
             dict_items["pedido"] = pedido[i]
             dict_items["refs"] = refs[i]
             dict_items["desc"] = desc[i]
@@ -247,7 +237,6 @@ def get_order() -> Generator[dict[str, Any], None, None]:
 
 
     
-
     time.sleep(1)
 
     try:
