@@ -28,7 +28,7 @@ load_dotenv()
 options = webdriver.ChromeOptions() 
 options.add_experimental_option('useAutomationExtension', False)
 driver = webdriver.Chrome(options=options,
-                               executable_path=r"C:\Users\Mybox Marcenaria\Documents\ETL_rev3\extracao_promob\chromedriver\chromedriver.exe")
+                               executable_path=r"C:\estimadoresteste\extracao_promob\chromedriver\chromedriver.exe")
 
 
 def scroll_page() -> None:
@@ -44,13 +44,10 @@ def scroll_page() -> None:
             match=True
 
 
-
 def user_login() -> None:
     driver.get("https://consultasweb.promob.com/Authentication/Index?ReturnUrl")
     driver.implicitly_wait(7)
     time.sleep(4)
-    #password = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.ID, 'password-clearr'))).click()
-    #password.clear()
 
     empresa = driver.find_element(By.ID, "company")
     ActionChains(driver)\
@@ -71,76 +68,122 @@ def user_login() -> None:
     WebDriverWait(driver, 20).until(EC.presence_of_element_located((
         By.XPATH, '//*[@id="div-login"]/div[4]/input'))).click()
 
-
-def get_order_detais(*args, **kwargs) -> None:
+     
     
-    driver.implicitly_wait(7)
+def get_order_detais(*args, **kwargs) -> None:
     lista_dicts = []
+    driver.implicitly_wait(7)
+  
     for urls in args:
         print(urls)
-        dict_items = {}
-
-        driver.get(urls["URLS"])
-
+        
+        driver.get(urls["urls"])
+  
         time.sleep(3)
-      
-        scroll_page()
 
-        referencias = driver.find_elements(By.XPATH,'//*[@id="grid"]/thead/tr/th/span')
-        refs = [referencia.text for referencia in referencias]
+        try:
+            emissao = driver.find_elements(By.XPATH,'//*[@id="grid"]/tbody/tr[1]/td[3]/span')[0].text
+        except Exception as e:
+            print(e)
 
-        valores = driver.find_elements(By.XPATH,'//*[@id="grid"]/tbody/tr[1]/td')
-        val = [valor.text for valor in valores if valor]
-        new_item  = list(filter(None, val))
+        try:
+            entrega = driver.find_elements(By.XPATH,'//*[@id="grid"]/tbody/tr[1]/td[4]/span')[0].text
+        except Exception as e:
+            print(e)
+        
+        try:
+            oc_pedido = driver.find_elements(By.XPATH,'//*[@id="grid"]/tbody/tr[1]/td[7]')[0].text
+        except Exception as e:
+            print(e)
 
-        new_dict = dict(zip_longest(refs, new_item))
+        quantidade_solicitada = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[6]')
+        quantidad_s = [quantidad_s.text for quantidad_s in quantidade_solicitada]
 
-        valores_2 = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr')
-        order = [orders.text.split("\n") for orders in valores_2]
-        for i in range(len(order)):
+        quantidade_faturada = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[7]/div')
+        quantidadef = [quantidadef.text for quantidadef in quantidade_faturada]
+
+        quantidade_em_aberto = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[8]/div')
+        quantidade_a = [quantidade_a.text for quantidade_a in quantidade_em_aberto]
+
+        valor_unitario = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[9]/div')
+        valor_un = [valor_un.text for valor_un in valor_unitario]
+
+        valor_produtos = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[10]/div')
+        valor_prod = [valor_prod.text for valor_prod in valor_produtos]
+
+        valor_aberto = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[11]/div')
+        valor_ab = [valor_ab.text for valor_ab in valor_aberto]
+
+        natureza = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[5]')
+        nat = [nat.text for nat in natureza]
+
+        unidade = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[4]')
+        unid = [unid.text for unid in unidade]
+
+        descricao = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[3]')
+        desc = [desc.text for desc in descricao]
+
+        referencias = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[2]')
+        refs = [refs.text for refs in referencias]
+
+        pedidos = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[1]/div')
+        pedido = [pedido.text for pedido in pedidos]
+
+
+        for i in range(len(pedido)):
+            dict_items = {}
             
-       
-            dict_items['URLS'] = urls["URLS"]
-            dict_items['LOJAS'] = urls["LOJAS"]
-            dict_items['REFERENCIAS'] = urls["REFERENCIAS"]
-            dict_items['LOTES'] = urls["LOTES"]
-            dict_items['DATACADASTRO'] = urls["DATACADASTRO"]
-            dict_items['DATAENTREGA'] = urls["DATAENTREGA"]
-            dict_items['VALOR'] = urls["VALOR"]
-            dict_items['TIPO'] = urls["TIPO"]
-            dict_items['STATUS'] = urls["STATUS"]
-      
-
-            #dict_items["ReferenciaPedido"] = order_url.split("=")[-1]
+            dict_items["pedido"] = pedido[i]
+            dict_items["refs"] = refs[i]
+            dict_items["desc"] = desc[i]
+            dict_items["unid"] = unid[i]
+            dict_items["nat"] = nat[i]
+            dict_items["valor_ab"] = valor_ab[i]
+            dict_items["valor_prod"] = valor_prod[i]
+            dict_items["valor_un"] = valor_un[i]
+            dict_items["quantidade_a"] = quantidade_a[i]
+            dict_items["quantidadef"] = quantidadef[i]
+            dict_items["quantidad_s"] = quantidad_s[i]
 
             try:
-                dict_items['Pedidos'] = order[i][0]
-                dict_items['Nomes'] = order[i][1]
-                dict_items['Quantidade Solicitada'] = order[i][2]
-                dict_items['Quantidade Faturada'] = order[i][3]
-                dict_items['Quantidade Faturada'] = order[i][4]
-                dict_items['Quantidade em aberto'] = order[i][5]
-                dict_items['Valor unitario'] = order[i][6]
-                dict_items['Valor Produtos'] = order[i][7]
-               
-                dict_items.update(new_dict)
-                
-            except Exception as e:
-                print(e)
-            
-           
-        lista_dicts.append(dict_items)
-    data = pd.DataFrame(lista_dicts)
-    data.to_excel("pedidosteste.xlsx")
- 
+                dict_items["emissao"] = emissao
+            except:
+                pass
+            try:
+                dict_items["entrega"] = entrega
+            except:
+                pass
 
-def get_order() -> Generator[dict[str, Any], None, None]:
+            try:
+                dict_items["oc_pedido"] = oc_pedido
+            except:
+                pass
+
+            dict_items["urls"] = urls["urls"]
+            dict_items["lote_pedidos"] = urls["lote"]
+            dict_items["loja_responsavel"] = urls["loja"]
+            dict_items["status_pedidos"] = urls["status"]
+            dict_items["tipo_pedidos"] = urls["tipo"]
+            dict_items["totais"] = urls["total"]
+            dict_items["datas_entrega"] = urls["dataentrega"]
+            dict_items["datas"] = urls["datas"]
+            dict_items["cliente_pedidos"] = urls["cliente"]
+            dict_items["pedido_oc"] = urls["pedidooc"]
+            dict_items["referencias_pedidos"] = urls["referenciapedido"]
+            
+            print(dict_items)
+            lista_dicts.append(dict_items)
     
+    data = pd.DataFrame(lista_dicts)
+    data.to_excel("relatoriopedidosteste.xlsx")
+    
+def get_order() -> Generator[dict[str, Any], None, None]:
+    """Extrai informações Tela inicial Promob"""
     driver.implicitly_wait(4)
     
     driver.get("https://consultasweb.promob.com/order")
     
-
+    """Seleciona range de datas"""
     data_de = driver.find_element(By.ID,'datepickerinit')
     data_de.clear()
     data_de.send_keys("01/01/2022")
@@ -150,104 +193,103 @@ def get_order() -> Generator[dict[str, Any], None, None]:
     data_final.clear()
     data_final.send_keys("01/02/2023")
 
-    time.sleep(3)
-
-    scroll_page()
-    lista_datas = []
-    lista_entrega = []
-    lista_valor = []
-    lista_tipo = []
-    lista_status = []
-    lista_lojas = []
-    lista_urls = []
-    lista_referencias = []
-    lista_lotes = []
+    time.sleep(1)
 
     try:
         data_cadastro = driver.find_elements(By.XPATH,'//*[@id="grid"]/tbody/tr/td[2]/span')
-        for datas in data_cadastro:
-            lista_datas.append(datas.text)
+        datas = [data.text for data in data_cadastro]
+
     except Exception as e:
         print(e)
-
 
     try:
         data_entrega = driver.find_elements(By.XPATH,'//*[@id="grid"]/tbody/tr/td[3]/span')
-        for entregas in data_entrega:
-            lista_entrega.append(entregas.text)
+        datas_entrega = [entrega.text for entrega  in data_entrega]
+      
     except Exception as e:
         print(e)
 
-    
     try:
         valortotal = driver.find_elements(By.XPATH,'//*[@id="grid"]/tbody/tr/td[11]/div')
-        for valores in valortotal:
-            lista_tipo.append(valores.text)
+        totais = [valor.text for valor in valortotal]
+      
     except Exception as e:
         print(e)
 
     try:
-        tipo = driver.find_elements(By.XPATH,'//*[@id="grid"]/tbody/tr/td[4]')
-        for tipos in tipo:
-            lista_valor.append(tipos.text)
+        tipos = driver.find_elements(By.XPATH,'//*[@id="grid"]/tbody/tr/td[4]')
+        tipo_pedidos = [tipo.text for tipo in tipos]
+
     except Exception as e:
         print(e)
     
-
     try:
         status = driver.find_elements(By.XPATH,'//*[@id="grid"]/tbody/tr/td[5]')
-        for statu in status:
-            lista_status.append(statu.text)
+        status_pedidos = [statu.text for statu in status]
+     
     except Exception as e:
         print(e)
-
 
 
     try:
         lojas = driver.find_elements(By.XPATH,'//*[@id="grid"]/tbody/tr/td[9]')
-        for loja in lojas:
-            lista_lojas.append(loja.text)
+        loja_responsavel = [loja.text for loja in lojas]
+       
     except Exception as e:
         print(e)
 
     try:
         url_base = driver.find_elements(By.XPATH,'//*[@id="grid"]/tbody/tr/td[1]/div/a')
-        for urls in url_base:
-            lista_urls.append(urls.get_attribute("href"))
-            lista_referencias.append(urls.text)
- 
+        urls_p = [urls.get_attribute("href") for urls in url_base]
+       
     except Exception as e:
         print(e)
 
     try:
         lotes = driver.find_elements(By.XPATH,'//*[@id="grid"]/tbody/tr/td[7]/div')
-        for lote in lotes:
-            lista_lotes.append(lote.text)
-          
+        lote_pedidos = [lote.text for lote in lotes]
+      
     except Exception as e:
         print(e)
-    
 
-    for i in range(len(lista_urls)):
+    try:
+        clientes = driver.find_elements(By.XPATH,'//*[@id="grid"]/tbody/tr/td[8]/div')
+        cliente_pedidos = [cliente.text for cliente in clientes]
+    except Exception as e:
+        print(e)
+
+    try:
+        oc_pedidos = driver.find_elements(By.XPATH,'//*[@id="grid"]/tbody/tr/td[6]')
+        pedido_oc = [oc.text for oc in oc_pedidos]
+    except Exception as e:
+        print(e)
+
+    try:
+        refecias_pedidos = driver.find_elements(By.XPATH,'//*[@id="grid"]/tbody/tr/td[1]/div/a')
+        referencias_p = [referencias.text for referencias in refecias_pedidos]
+    except Exception as e:
+        print(e)
+
+
+    for i in range(len(urls_p)):
         new_dict = {}
-        try:
-            new_dict["URLS"] = lista_urls[i]
-            new_dict["DATACADASTRO"] = lista_datas[i]
-            new_dict["DATAENTREGA"] = lista_entrega[i]
-            new_dict["TIPO"] = lista_valor[i]
-            new_dict["VALOR"] = lista_tipo[i]
-            new_dict["STATUS"] = lista_status[i]
-            new_dict["LOJAS"] = lista_lojas[i]
-            new_dict["URLS"] = lista_urls[i]
-            new_dict["REFERENCIAS"] = lista_referencias[i]
-            new_dict["LOTES"] = lista_lotes[i]
-          
-            get_order_detais(new_dict)
-        except Exception as e:
-            print(e)
-        #get_order_detais
+        new_dict["urls"] = urls_p[i]
+        new_dict["referenciapedido"] = referencias_p[i]
+        new_dict["pedidooc"] = pedido_oc[i]
+        new_dict["cliente"] = cliente_pedidos[i]
+        new_dict["lote"] = lote_pedidos[i]
+        new_dict["loja"] = loja_responsavel[i]
+        new_dict["status"] = status_pedidos[i]
+        new_dict["tipo"] = tipo_pedidos[i]
+        new_dict["total"] = totais[i]
+        new_dict["dataentrega"] = datas_entrega[i]
+        new_dict["datas"] = datas[i]
+        print(new_dict)
+        get_order_detais(new_dict)
 
 
+ 
+   
 user_login()
 
 get_order()
