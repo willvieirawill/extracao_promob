@@ -168,10 +168,12 @@ def get_order_detais(*args, **kwargs) -> None:
         for i in range(len(pedido)):
             dict_items = {}
           
-    
-            datasf = datetime.datetime.strftime(urls["datas"],'%Y-%m-%d %H:%M:%S')
-
-            datas_entrega = datetime.datetime.strftime(urls["dataentrega"],'%Y-%m-%d %H:%M:%S')
+            testeddate = str(urls["datas"])
+            datasf = datetime.datetime.strftime(testeddate,'%Y-%m-%d %H:%M:%S')
+            
+            testeddate = str(urls["dataentrega"])
+            datas_entrega = datetime.datetime.strftime(testeddate,'%Y-%m-%d %H:%M:%S')
+            
             
             dict_items["pedido"] = pedido[i]
             dict_items["refs"] = refs[i]
