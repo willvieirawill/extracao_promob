@@ -63,7 +63,23 @@ def user_login() -> None:
         By.XPATH, '//*[@id="div-login"]/div[4]/input'))).click()
 
 
+def filtrar_periodo():
+    driver.implicitly_wait(7)
+    try:
+        data_de = driver.find_element(By.ID,'datepickerinit')
+        data_de.clear()
+        data_de.send_keys('26/02/2020')
+    except:
+        pass
     
+    try:
+        data_ate = driver.find_element(By.ID,'datepickerfin')
+        data_ate.clear()
+        data_ate.send_keys('12/03/2023')
+    except:
+        pass
+
+
 def get_order_detais(*args, **kwargs) -> None:
     lista_dicts = []
     driver.implicitly_wait(7)
@@ -89,6 +105,7 @@ def get_order_detais(*args, **kwargs) -> None:
             oc_pedido = driver.find_elements(By.XPATH,'//*[@id="grid"]/tbody/tr[1]/td[7]')[0].text
         except Exception as e:
             print(e)
+            
         try:
             quantidade_solicitada = driver.find_elements(By.XPATH,'//*[@id="OrderDetail"]/table/tbody/tr/td[6]')
             quantidad_s = [quantidad_s.text.replace(",",".") for quantidad_s in quantidade_solicitada]
